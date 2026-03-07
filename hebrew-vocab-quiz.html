@@ -37,7 +37,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px 20px 60px;
+  padding: 16px 20px 24px;
   overflow-x: hidden;
   position: relative;
 }
@@ -62,12 +62,12 @@ body {
 header {
   position: relative; z-index: 2;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 h1 {
   font-family: 'Boogaloo', cursive;
-  font-size: clamp(42px, 6vw, 72px);
+  font-size: clamp(28px, 4vw, 48px);
   line-height: 1;
   background: linear-gradient(135deg, #ff5252, #ff8c00, #ffe033, #00c853, #2979ff, #aa00ff);
   -webkit-background-clip: text;
@@ -92,7 +92,7 @@ header .tagline {
   position: relative; z-index: 2;
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -100,9 +100,9 @@ header .tagline {
 .stat-box {
   background: white;
   border-radius: 16px;
-  padding: 10px 20px;
+  padding: 6px 16px;
   text-align: center;
-  min-width: 82px;
+  min-width: 76px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 3px 0 rgba(0,0,0,0.06);
   border: 2px solid transparent;
   transition: transform 0.2s;
@@ -114,7 +114,7 @@ header .tagline {
 
 .stat-box .num {
   font-family: 'Boogaloo', cursive;
-  font-size: 28px;
+  font-size: 22px;
   line-height: 1;
 }
 .stat-box.correct .num { color: var(--green); }
@@ -133,10 +133,10 @@ header .tagline {
 .progress-wrap {
   position: relative; z-index: 2;
   width: 100%; max-width: 600px;
-  height: 16px;
+  height: 10px;
   background: rgba(0,0,0,0.08);
   border-radius: 50px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   overflow: hidden;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -168,15 +168,15 @@ header .tagline {
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 /* ===== HEARTS ===== */
 .attempts-row {
   position: relative; z-index: 2;
   text-align: center;
-  font-size: 30px;
-  margin-bottom: 16px;
+  font-size: 22px;
+  margin-bottom: 8px;
   letter-spacing: 6px;
 }
 
@@ -185,8 +185,8 @@ header .tagline {
   position: relative; z-index: 2;
   width: 100%; max-width: 600px;
   background: white;
-  border-radius: 28px;
-  padding: 40px 48px;
+  border-radius: 22px;
+  padding: 24px 40px;
   box-shadow:
     0 8px 0 rgba(0,0,0,0.07),
     0 20px 60px rgba(0,0,0,0.12);
@@ -207,14 +207,14 @@ header .tagline {
   letter-spacing: 0.5px;
   padding: 7px 20px;
   border-radius: 50px;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   box-shadow: 0 3px 0 rgba(0,0,0,0.1);
 }
 .dir-badge.en { background: #e3f2fd; color: #1565c0; }
 .dir-badge.he { background: #fff8e1; color: #e65100; }
 
 /* word shown */
-.prompt-area { text-align: center; margin-bottom: 30px; }
+.prompt-area { text-align: center; margin-bottom: 16px; }
 
 .prompt-label {
   font-size: 12px;
@@ -222,12 +222,12 @@ header .tagline {
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--muted);
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .word-shown {
   font-family: 'Boogaloo', cursive;
-  font-size: clamp(50px, 8vw, 80px);
+  font-size: clamp(34px, 5vw, 54px);
   line-height: 1.05;
 }
 .word-shown.en-word { color: #1565c0; }
@@ -256,8 +256,8 @@ header .tagline {
 .inputs-area {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-bottom: 18px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .input-wrap { display: flex; flex-direction: column; gap: 6px; }
@@ -272,10 +272,10 @@ header .tagline {
 
 input[type="text"] {
   width: 100%;
-  padding: 15px 22px;
+  padding: 10px 18px;
   border: 3px solid #e0e0e0;
-  border-radius: 16px;
-  font-size: 22px;
+  border-radius: 14px;
+  font-size: 18px;
   font-family: 'Nunito', sans-serif;
   font-weight: 800;
   color: var(--text);
@@ -316,16 +316,16 @@ input[type="text"].inp-wrong {
 /* ===== BUTTONS ===== */
 .btn-check {
   width: 100%;
-  padding: 18px;
+  padding: 12px;
   border: none;
   border-radius: 16px;
   background: linear-gradient(135deg, #2979ff, #aa00ff);
   color: white;
   font-family: 'Boogaloo', cursive;
-  font-size: 24px;
+  font-size: 20px;
   letter-spacing: 0.5px;
   cursor: pointer;
-  box-shadow: 0 6px 0 #1a4db5, 0 8px 28px rgba(41,121,255,0.35);
+  box-shadow: 0 4px 0 #1a4db5, 0 8px 28px rgba(41,121,255,0.35);
   transition: transform 0.1s, box-shadow 0.1s;
   position: relative;
   top: 0;
@@ -343,7 +343,7 @@ input[type="text"].inp-wrong {
   font-family: 'Boogaloo', cursive;
   font-size: 20px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 6px;
   display: none;
   transition: all 0.15s;
   animation: fadeUp 0.3s ease;
@@ -356,10 +356,10 @@ input[type="text"].inp-wrong {
 /* ===== FEEDBACK ===== */
 .feedback-box {
   display: none;
-  margin-top: 16px;
-  padding: 16px 22px;
-  border-radius: 16px;
-  font-size: 17px;
+  margin-top: 10px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-size: 15px;
   font-weight: 800;
   text-align: center;
   animation: feedbackPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
@@ -487,6 +487,67 @@ input[type="text"].inp-wrong {
   25% {background:rgba(255,255,200,0.65)}
   100%{background:rgba(255,255,255,0)}
 }
+
+/* ===== VIRTUAL HEBREW KEYBOARD ===== */
+#heb-keyboard {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 600px;
+  background: white;
+  border-radius: 20px;
+  padding: 16px 14px 14px;
+  margin-top: 14px;
+  box-shadow: 0 6px 0 rgba(0,0,0,0.07), 0 12px 40px rgba(0,0,0,0.1);
+  border: 3px solid rgba(0,0,0,0.05);
+  display: none;
+  animation: fadeUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+#heb-keyboard .kb-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.kb-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 5px;
+  direction: rtl;
+}
+
+.kb-key {
+  min-width: 44px;
+  height: 44px;
+  background: #f5f7ff;
+  border: 2px solid #e0e5ff;
+  border-radius: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #2c3e80;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 0 #c5ceff;
+  transition: transform 0.08s, box-shadow 0.08s, background 0.08s;
+  user-select: none;
+  padding: 0 6px;
+}
+.kb-key:hover  { background: #e8ecff; border-color: #b0baff; }
+.kb-key:active { transform: translateY(3px); box-shadow: 0 0 0 #c5ceff; background: #dde3ff; }
+
+.kb-key.kb-backspace {
+  min-width: 58px;
+  font-size: 16px;
+  background: #fff0f0;
+  border-color: #ffcdd2;
+  box-shadow: 0 3px 0 #ffb3b3;
+  color: #c62828;
+}
 </style>
 </head>
 <body>
@@ -502,6 +563,29 @@ input[type="text"].inp-wrong {
 <script>
 const VOCABULARY = [
 
+/*
+  { en: "hello",       he: "שלום" },
+  { en: "goodbye",     he: "להתראות" },
+  { en: "thank you",   he: "תודה" },
+  { en: "please",      he: "בבקשה" },
+  { en: "water",       he: "מים" },
+  { en: "book",        he: "ספר" },
+  { en: "school",      he: "בית ספר" },
+  { en: "friend",      he: "חבר" },
+  { en: "house",       he: "בית" },
+  { en: "dog",         he: "כלב" },
+  { en: "cat",         he: "חתול" },
+  { en: "apple",       he: "תפוח" },
+  { en: "to run",      past: "ran",    he: "לרוץ" },
+  { en: "to eat",      past: "ate",    he: "לאכול" },
+  { en: "to drink",    past: "drank",  he: "לשתות" },
+  { en: "to write",    past: "wrote",  he: "לכתוב" },
+  { en: "to read",     past: "read",   he: "לקרוא" },
+  { en: "to go",       past: "went",   he: "ללכת" },
+  { en: "to see",      past: "saw",    he: "לראות" },
+  { en: "to love",     past: "loved",  he: "לאהוב" },
+*/  
+  
 { en: "to be", past: "was/were", he: "להיות" },
 { en: "to beat", past: "beat", he: "להביס" },
 { en: "to become", past: "became", he: "להיות" },
@@ -527,30 +611,6 @@ const VOCABULARY = [
 { en: "to fall", past: "fell", he: "ליפול" },
 
 
-/*
-
-  { en: "hello",       he: "שלום" },
-  { en: "goodbye",     he: "להתראות" },
-  { en: "thank you",   he: "תודה" },
-  { en: "please",      he: "בבקשה" },
-  { en: "water",       he: "מים" },
-  { en: "book",        he: "ספר" },
-  { en: "school",      he: "בית ספר" },
-  { en: "friend",      he: "חבר" },
-  { en: "house",       he: "בית" },
-  { en: "dog",         he: "כלב" },
-  { en: "cat",         he: "חתול" },
-  { en: "apple",       he: "תפוח" },
-  { en: "to run",      past: "ran",    he: "לרוץ" },
-  { en: "to eat",      past: "ate",    he: "לאכול" },
-  { en: "to drink",    past: "drank",  he: "לשתות" },
-  { en: "to write",    past: "wrote",  he: "לכתוב" },
-  { en: "to read",     past: "read",   he: "לקרוא" },
-  { en: "to go",       past: "went",   he: "ללכת" },
-  { en: "to see",      past: "saw",    he: "לראות" },
-  { en: "to love",     past: "loved",  he: "לאהוב" },
-  
-  */
   
 ];
 </script>
@@ -708,6 +768,7 @@ let correct=0, wrong=0, streak=0, bestStreak=0;
 let attemptsLeft=MAX_ATTEMPTS;
 let direction='en-to-he';
 let questionDone=false;
+let answerRevealed=false;
 
 // ================================================================
 // HELPERS
@@ -723,7 +784,8 @@ function normalize(s) {
 }
 
 function heartHTML(n) {
-  return '❤️ '.repeat(n) + '🖤 '.repeat(MAX_ATTEMPTS - n);
+  const safe = Math.max(0, n);
+  return '❤️ '.repeat(safe) + '🖤 '.repeat(Math.max(0, MAX_ATTEMPTS - safe));
 }
 
 function updateStats() {
@@ -758,6 +820,7 @@ function startQuiz() {
 // ================================================================
 function loadQuestion() {
   questionDone = false;
+  answerRevealed = false;
   attemptsLeft = MAX_ATTEMPTS;
   const q = questions[currentIdx];
   direction = Math.random() < 0.5 ? 'en-to-he' : 'he-to-en';
@@ -821,7 +884,7 @@ function loadQuestion() {
 
   // keyboard
   document.onkeydown = e => {
-    if (e.key === 'Enter') { questionDone ? nextQuestion() : checkAnswer(); }
+    if (e.key === 'Enter') { (questionDone && !answerRevealed) ? nextQuestion() : checkAnswer(); }
   };
 }
 
@@ -857,7 +920,7 @@ function buildInputs(q) {
 // CHECK ANSWER — 3 attempts
 // ================================================================
 function checkAnswer() {
-  if (questionDone) return;
+  if (questionDone && !answerRevealed) return;
 
   const q       = questions[currentIdx];
   const mainInp = document.getElementById('inp-main');
@@ -888,9 +951,6 @@ function checkAnswer() {
   if (isCorrect) {
     // ✅ CORRECT!
     questionDone = true;
-    correct++;
-    streak++;
-    if (streak > bestStreak) bestStreak = streak;
 
     if (mainInp) { mainInp.classList.remove('inp-wrong'); mainInp.classList.add('inp-correct'); }
     if (pastInp) { pastInp.classList.remove('inp-wrong'); pastInp.classList.add('inp-correct'); }
@@ -899,18 +959,29 @@ function checkAnswer() {
     flashScreen();
     confettiBurst();
 
-    const msgs = [
-      '🎯 Spot on!','⚡ Nailed it!','🔥 YES!!','💥 BOOM!',
-      '🌟 Fantastic!','😎 Too easy!','🏆 Perfect!','✅ Correct!',
-      '🚀 Crushing it!','💪 That\'s it!'
-    ];
-    fb.className    = 'feedback-box correct';
-    fb.textContent  = msgs[Math.floor(Math.random()*msgs.length)];
-    fb.style.display = 'block';
-
-    if (streak >= 3 && streak % 3 === 0) {
-      showToast(`🔥 ${streak} in a row! INSANE!`);
-      playStreak();
+    if (!answerRevealed) {
+      // Normal correct — full credit
+      correct++;
+      streak++;
+      if (streak > bestStreak) bestStreak = streak;
+      const msgs = [
+        '🎯 Spot on!','⚡ Nailed it!','🔥 YES!!','💥 BOOM!',
+        '🌟 Fantastic!','😎 Too easy!','🏆 Perfect!','✅ Correct!',
+        '🚀 Crushing it!','💪 That\'s it!'
+      ];
+      fb.className    = 'feedback-box correct';
+      fb.textContent  = msgs[Math.floor(Math.random()*msgs.length)];
+      fb.style.display = 'block';
+      if (streak >= 3 && streak % 3 === 0) {
+        showToast(`🔥 ${streak} in a row! INSANE!`);
+        playStreak();
+      }
+    } else {
+      // Typed correctly after reveal — celebrate but no score change
+      answerRevealed = false;
+      fb.className    = 'feedback-box correct';
+      fb.textContent  = '✅ Good job — you got it! Moving on...';
+      fb.style.display = 'block';
     }
 
     updateStats();
@@ -919,7 +990,7 @@ function checkAnswer() {
 
   } else {
     // ❌ WRONG attempt
-    attemptsLeft--;
+    if (!answerRevealed) { attemptsLeft--; }
     updateHearts();
 
     // shake wrong inputs, green correct ones (for verbs)
@@ -962,18 +1033,29 @@ function checkAnswer() {
       }, 700);
 
     } else {
-      // Out of attempts
-      questionDone = true;
-      wrong++;
-      streak = 0;
+      // Out of attempts — reveal answer, keep asking until correct
+      if (!answerRevealed) {
+        answerRevealed = true;
+        wrong++;
+        streak = 0;
+        updateStats();
+      }
       playWrong();
       fb.className = 'feedback-box wrong';
-      fb.innerHTML = `😅 Out of tries! The answer was: <strong>${correctAnswer}</strong>`;
+      fb.innerHTML = `😅 The answer is: <strong>${correctAnswer}</strong> — now type it in correctly to move on!`;
       fb.style.display = 'block';
 
-      updateStats();
-      document.getElementById('btn-check').style.display = 'none';
-      document.getElementById('btn-next').style.display  = 'block';
+      // Clear wrong inputs so they can type the correct answer
+      setTimeout(() => {
+        if (direction === 'en-to-he' || !q.past) {
+          if (mainInp) { mainInp.classList.remove('inp-wrong'); mainInp.value = ''; mainInp.focus(); }
+        } else {
+          if (mainInp && !mainOk) { mainInp.classList.remove('inp-wrong'); mainInp.value = ''; }
+          if (pastInp && !pastOk) { pastInp.classList.remove('inp-wrong'); pastInp.value = ''; }
+          const toFocus = (mainInp && !mainOk) ? mainInp : pastInp;
+          if (toFocus) toFocus.focus();
+        }
+      }, 700);
     }
   }
 }
