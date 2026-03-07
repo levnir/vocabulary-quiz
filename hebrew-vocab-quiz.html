@@ -562,9 +562,9 @@ input[type="text"].inp-wrong {
      ================================================================ -->
 <script>
 const VOCABULARY = [
-
+  
   /*
-
+  
   { en: "hello",       he: "שלום" },
   { en: "goodbye",     he: "להתראות" },
   { en: "thank you",   he: "תודה" },
@@ -810,7 +810,7 @@ function updateHearts() {
 // ================================================================
 function startQuiz() {
   correct=0; wrong=0; streak=0; bestStreak=0; currentIdx=0;
-  questions = shuffle(VOCABULARY).slice(0, Math.min(TOTAL_Q, VOCABULARY.length));
+  questions = shuffle(VOCABULARY);
   updateStats();
   document.getElementById('quiz-card').style.display     = 'block';
   document.getElementById('result-screen').style.display = 'none';
