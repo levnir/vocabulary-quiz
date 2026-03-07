@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌟 Hebrew Word Blast!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Boogaloo&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   VOCABULARY LIST — Edit the VOCABULARY array in the <script> below!
+
+   Regular word:  { en: "hello",   he: "שלום" }
+   Verb:          { en: "to run",  past: "ran",  he: "לרוץ" }
+   ================================================================ */
+
+:root {
+  --sky:    #e0f7ff;
+  --card:   #ffffff;
+  --yellow: #ffe033;
+  --orange: #ff8c00;
+  --coral:  #ff5252;
+  --green:  #00c853;
+  --blue:   #2979ff;
+  --purple: #aa00ff;
+  --pink:   #f50057;
+  --text:   #1a1a2e;
+  --muted:  #7a869a;
+  --radius: 22px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff9c4 0%, #e0f7ff 40%, #fce4ec 80%, #f3e5f5 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 60px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ===== FLOATING EMOJI BACKGROUND ===== */
+.bg-emoji {
+  position: fixed;
+  font-size: 32px;
+  opacity: 0.09;
+  pointer-events: none;
+  animation: floatUp linear infinite;
+  z-index: 0;
+}
+@keyframes floatUp {
+  0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
+  10%  { opacity: 0.09; }
+  90%  { opacity: 0.09; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+/* ===== HEADER ===== */
+header {
+  position: relative; z-index: 2;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+h1 {
+  font-family: 'Boogaloo', cursive;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1;
+  background: linear-gradient(135deg, #ff5252, #ff8c00, #ffe033, #00c853, #2979ff, #aa00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 3px 0px rgba(0,0,0,0.08));
+  animation: rainbow 4s linear infinite;
+  background-size: 300%;
+}
+@keyframes rainbow { 0%{background-position:0%} 100%{background-position:300%} }
+
+header .tagline {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+/* ===== STATS ROW ===== */
+.stats-row {
+  position: relative; z-index: 2;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat-box {
+  background: white;
+  border-radius: 16px;
+  padding: 10px 20px;
+  text-align: center;
+  min-width: 82px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 3px 0 rgba(0,0,0,0.06);
+  border: 2px solid transparent;
+  transition: transform 0.2s;
+}
+.stat-box:hover { transform: translateY(-2px); }
+.stat-box.correct { border-color: var(--green); }
+.stat-box.wrong   { border-color: var(--coral); }
+.stat-box.streak  { border-color: var(--yellow); background: #fffde7; }
+
+.stat-box .num {
+  font-family: 'Boogaloo', cursive;
+  font-size: 28px;
+  line-height: 1;
+}
+.stat-box.correct .num { color: var(--green); }
+.stat-box.wrong   .num { color: var(--coral); }
+.stat-box.streak  .num { color: var(--orange); }
+.stat-box .lbl {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ===== PROGRESS ===== */
+.progress-wrap {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 600px;
+  height: 16px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 50px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #ff5252, #ff8c00, #ffe033, #00c853);
+  background-size: 200%;
+  animation: progressShine 2s linear infinite;
+  transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  right: -2px; top: 2px;
+  width: 12px; height: 12px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0,0,0,0.2);
+}
+@keyframes progressShine { 0%{background-position:0%} 100%{background-position:200%} }
+
+.question-counter {
+  position: relative; z-index: 2;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+
+/* ===== HEARTS ===== */
+.attempts-row {
+  position: relative; z-index: 2;
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 16px;
+  letter-spacing: 6px;
+}
+
+/* ===== CARD ===== */
+.card {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 600px;
+  background: white;
+  border-radius: 28px;
+  padding: 40px 48px;
+  box-shadow:
+    0 8px 0 rgba(0,0,0,0.07),
+    0 20px 60px rgba(0,0,0,0.12);
+  border: 3px solid rgba(0,0,0,0.04);
+}
+
+.card-inner { animation: cardPop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes cardPop {
+  from { opacity:0; transform: scale(0.86) translateY(24px) rotate(-1deg); }
+  to   { opacity:1; transform: scale(1) translateY(0) rotate(0); }
+}
+
+/* direction badge */
+.dir-badge {
+  display: inline-block;
+  font-family: 'Boogaloo', cursive;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  padding: 7px 20px;
+  border-radius: 50px;
+  margin-bottom: 24px;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+}
+.dir-badge.en { background: #e3f2fd; color: #1565c0; }
+.dir-badge.he { background: #fff8e1; color: #e65100; }
+
+/* word shown */
+.prompt-area { text-align: center; margin-bottom: 30px; }
+
+.prompt-label {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.word-shown {
+  font-family: 'Boogaloo', cursive;
+  font-size: clamp(50px, 8vw, 80px);
+  line-height: 1.05;
+}
+.word-shown.en-word { color: #1565c0; }
+.word-shown.he-word { color: #e65100; direction: rtl; }
+.word-shown.bounce  { animation: wordBounce 0.55s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes wordBounce {
+  0%  {transform:scale(0.7) rotate(-4deg); opacity:0.5}
+  60% {transform:scale(1.1) rotate(2deg)}
+  80% {transform:scale(0.97)}
+  100%{transform:scale(1) rotate(0); opacity:1}
+}
+
+.verb-hint {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--purple);
+  background: #f3e5f5;
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 50px;
+  border: 2px solid #ce93d8;
+}
+
+/* ===== INPUTS ===== */
+.inputs-area {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.input-wrap { display: flex; flex-direction: column; gap: 6px; }
+
+.input-label {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 15px 22px;
+  border: 3px solid #e0e0e0;
+  border-radius: 16px;
+  font-size: 22px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  color: var(--text);
+  outline: none;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s, background 0.2s;
+  background: #fafafa;
+}
+input[type="text"]:focus {
+  border-color: var(--blue);
+  background: #f0f6ff;
+  box-shadow: 0 0 0 4px rgba(41,121,255,0.12);
+  transform: scale(1.015);
+}
+input[type="text"].inp-correct {
+  border-color: var(--green) !important;
+  background: #f1fff6 !important;
+  box-shadow: 0 0 0 4px rgba(0,200,83,0.15) !important;
+  animation: correctPulse 0.45s;
+}
+input[type="text"].inp-wrong {
+  border-color: var(--coral) !important;
+  background: #fff5f5 !important;
+  box-shadow: 0 0 0 4px rgba(255,82,82,0.15) !important;
+  animation: shake 0.45s;
+}
+@keyframes correctPulse {
+  0%{transform:scale(1)} 40%{transform:scale(1.05)} 100%{transform:scale(1)}
+}
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  15%{transform:translateX(-14px)}
+  35%{transform:translateX(14px)}
+  55%{transform:translateX(-9px)}
+  75%{transform:translateX(9px)}
+}
+
+/* ===== BUTTONS ===== */
+.btn-check {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #2979ff, #aa00ff);
+  color: white;
+  font-family: 'Boogaloo', cursive;
+  font-size: 24px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #1a4db5, 0 8px 28px rgba(41,121,255,0.35);
+  transition: transform 0.1s, box-shadow 0.1s;
+  position: relative;
+  top: 0;
+}
+.btn-check:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #1a4db5, 0 14px 36px rgba(41,121,255,0.45); }
+.btn-check:active { transform: translateY(4px); box-shadow: 0 2px 0 #1a4db5, 0 4px 12px rgba(41,121,255,0.3); }
+
+.btn-next {
+  width: 100%;
+  padding: 15px;
+  border: 3px solid #e0e0e0;
+  border-radius: 16px;
+  background: white;
+  color: var(--muted);
+  font-family: 'Boogaloo', cursive;
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 10px;
+  display: none;
+  transition: all 0.15s;
+  animation: fadeUp 0.3s ease;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+}
+.btn-next:hover { border-color: var(--blue); color: var(--blue); background: #f0f6ff; transform: translateY(-2px); box-shadow: 0 5px 0 rgba(41,121,255,0.15); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ===== FEEDBACK ===== */
+.feedback-box {
+  display: none;
+  margin-top: 16px;
+  padding: 16px 22px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
+  animation: feedbackPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes feedbackPop { from{opacity:0;transform:scale(0.7) rotate(-2deg)} to{opacity:1;transform:scale(1) rotate(0)} }
+.feedback-box.correct {
+  background: linear-gradient(135deg, #e8f5e9, #f1fff6);
+  border: 2px solid #00c853;
+  color: #006d2b;
+}
+.feedback-box.wrong {
+  background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+  border: 2px solid #ff5252;
+  color: #b71c1c;
+}
+.feedback-box.warning {
+  background: linear-gradient(135deg, #fff8e1, #fff3cd);
+  border: 2px solid #ff8c00;
+  color: #8a3e00;
+}
+
+/* ===== RESULT SCREEN ===== */
+#result-screen {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 600px;
+  background: white;
+  border-radius: 28px;
+  padding: 52px 48px;
+  text-align: center;
+  display: none;
+  box-shadow: 0 8px 0 rgba(0,0,0,0.07), 0 20px 60px rgba(0,0,0,0.12);
+  animation: cardPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.grade-circle {
+  width: 150px; height: 150px;
+  border-radius: 50%;
+  margin: 0 auto 24px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  border: 6px solid;
+  animation: gradeSpin 0.7s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes gradeSpin {
+  from{transform:rotate(-20deg) scale(0.4); opacity:0}
+  to{transform:rotate(0) scale(1); opacity:1}
+}
+
+.grade-letter { font-family: 'Boogaloo', cursive; font-size: 66px; line-height: 1; }
+.grade-pct    { font-size: 14px; font-weight: 800; opacity: 0.6; margin-top: 2px; }
+
+#result-title {
+  font-family: 'Boogaloo', cursive;
+  font-size: 42px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+#result-sub { color: var(--muted); font-size: 16px; font-weight: 700; margin-bottom: 32px; }
+
+.result-stats-row {
+  display: flex; justify-content: center; gap: 36px;
+  margin-bottom: 36px; flex-wrap: wrap;
+}
+.res-stat .big {
+  font-family: 'Boogaloo', cursive;
+  font-size: 46px; line-height: 1;
+}
+.res-stat .lbl {
+  font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); margin-top: 4px;
+}
+
+.btn-restart {
+  width: 100%; padding: 18px; border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ff5252, #ff8c00);
+  color: white; font-family: 'Boogaloo', cursive;
+  font-size: 26px; cursor: pointer;
+  box-shadow: 0 6px 0 #b71c1c, 0 8px 28px rgba(255,82,82,0.35);
+  transition: all 0.1s;
+}
+.btn-restart:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #b71c1c, 0 14px 36px rgba(255,82,82,0.45); }
+.btn-restart:active { transform: translateY(4px); box-shadow: 0 2px 0 #b71c1c; }
+
+/* ===== CONFETTI ===== */
+.confetti-piece {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0%   { opacity:1; transform: translateY(0) rotate(0deg); }
+  100% { opacity:0; transform: translateY(100vh) rotate(720deg) scale(0.4); }
+}
+
+/* ===== TOAST ===== */
+#streak-toast {
+  position: fixed; top: 24px; left: 50%;
+  transform: translateX(-50%) translateY(-120px);
+  background: linear-gradient(135deg, #ffe033, #ff8c00);
+  color: #3d1a00;
+  font-family: 'Boogaloo', cursive;
+  font-size: 22px;
+  padding: 14px 32px;
+  border-radius: 50px;
+  z-index: 9998;
+  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 6px 0 #b85c00, 0 10px 32px rgba(255,140,0,0.4);
+  pointer-events: none;
+  white-space: nowrap;
+}
+#streak-toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ===== WIN FLASH ===== */
+#win-overlay {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+}
+#win-overlay.flash { animation: winFlash 0.55s; }
+@keyframes winFlash {
+  0%  {background:rgba(255,255,255,0)}
+  25% {background:rgba(255,255,200,0.65)}
+  100%{background:rgba(255,255,255,0)}
+}
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     ✏️  VOCABULARY — EDIT HERE to update words before each exam!
+
+     Regular word:  { en: "hello",    he: "שלום" }
+     Verb:          { en: "to run",   past: "ran",   he: "לרוץ" }
+
+     Just edit the list below, save, and re-upload to GitHub!
+     ================================================================ -->
+<script>
+const VOCABULARY = [
+  { en: "hello",       he: "שלום" },
+  { en: "goodbye",     he: "להתראות" },
+  { en: "thank you",   he: "תודה" },
+  { en: "please",      he: "בבקשה" },
+  { en: "water",       he: "מים" },
+  { en: "book",        he: "ספר" },
+  { en: "school",      he: "בית ספר" },
+  { en: "friend",      he: "חבר" },
+  { en: "house",       he: "בית" },
+  { en: "dog",         he: "כלב" },
+  { en: "cat",         he: "חתול" },
+  { en: "apple",       he: "תפוח" },
+  { en: "to run",      past: "ran",    he: "לרוץ" },
+  { en: "to eat",      past: "ate",    he: "לאכול" },
+  { en: "to drink",    past: "drank",  he: "לשתות" },
+  { en: "to write",    past: "wrote",  he: "לכתוב" },
+  { en: "to read",     past: "read",   he: "לקרוא" },
+  { en: "to go",       past: "went",   he: "ללכת" },
+  { en: "to see",      past: "saw",    he: "לראות" },
+  { en: "to love",     past: "loved",  he: "לאהוב" },
+];
+</script>
+
+<div id="win-overlay"></div>
+<div id="streak-toast">🔥 On fire!</div>
+
+<header>
+  <h1>🌟 Hebrew Word Blast! 🌟</h1>
+  <p class="tagline">Train your brain · Smash the exam 💥</p>
+</header>
+
+<div class="stats-row">
+  <div class="stat-box correct">
+    <div class="num" id="stat-correct">0</div>
+    <div class="lbl">✓ Correct</div>
+  </div>
+  <div class="stat-box wrong">
+    <div class="num" id="stat-wrong">0</div>
+    <div class="lbl">✗ Wrong</div>
+  </div>
+  <div class="stat-box streak">
+    <div class="num" id="stat-streak">0</div>
+    <div class="lbl">🔥 Streak</div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+</div>
+<div class="question-counter" id="q-counter">Question 1 of 20</div>
+
+<div class="attempts-row" id="attempts-row">❤️ ❤️ ❤️</div>
+
+<!-- QUIZ CARD -->
+<div class="card" id="quiz-card">
+  <div class="card-inner" id="card-inner">
+    <div class="dir-badge en" id="dir-badge">🇬🇧 Translate to Hebrew</div>
+    <div class="prompt-area">
+      <div class="prompt-label" id="prompt-label">What is this in Hebrew?</div>
+      <div class="word-shown en-word" id="word-shown">...</div>
+      <div class="verb-hint" id="verb-hint" style="display:none">📝 Give BOTH the infinitive AND the past tense!</div>
+    </div>
+    <div class="inputs-area" id="inputs-area"></div>
+    <button class="btn-check" id="btn-check" onclick="checkAnswer()">Check! ✓</button>
+    <button class="btn-next"  id="btn-next"  onclick="nextQuestion()">Next Word →</button>
+    <div class="feedback-box" id="feedback-box"></div>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="result-screen">
+  <div class="grade-circle" id="grade-circle">
+    <div class="grade-letter" id="grade-letter">A</div>
+    <div class="grade-pct"    id="grade-pct">100%</div>
+  </div>
+  <div id="result-title">Amazing!</div>
+  <div id="result-sub">Here's your score:</div>
+  <div class="result-stats-row">
+    <div class="res-stat">
+      <div class="big" style="color:var(--green)" id="res-correct">0</div>
+      <div class="lbl">Correct</div>
+    </div>
+    <div class="res-stat">
+      <div class="big" style="color:var(--coral)" id="res-wrong">0</div>
+      <div class="lbl">Wrong</div>
+    </div>
+    <div class="res-stat">
+      <div class="big" style="color:var(--orange)" id="res-streak">0</div>
+      <div class="lbl">Best Streak</div>
+    </div>
+  </div>
+  <button class="btn-restart" onclick="startQuiz()">🔄 Play Again!</button>
+</div>
+
+<script>
+// ================================================================
+// FLOATING BG EMOJIS
+// ================================================================
+const BG_EMOJIS = ['⭐','🌈','✨','🎯','💫','🎉','🌟','🔥','💡','📚','🎓','🏆','🚀','⚡','🎊'];
+BG_EMOJIS.forEach((em, i) => {
+  const el = document.createElement('div');
+  el.className = 'bg-emoji';
+  el.textContent = em;
+  el.style.cssText = `
+    left: ${(i / BG_EMOJIS.length) * 100}%;
+    animation-duration: ${11 + Math.random()*12}s;
+    animation-delay: ${-Math.random()*20}s;
+    font-size: ${24 + Math.random()*20}px;
+  `;
+  document.body.appendChild(el);
+});
+
+// ================================================================
+// AUDIO ENGINE
+// ================================================================
+let AC;
+function getAC() {
+  if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+  return AC;
+}
+
+function beep(freq, type='sine', dur=0.15, vol=0.25, delay=0) {
+  try {
+    const ac = getAC();
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.type = type; o.frequency.value = freq;
+    const t = ac.currentTime + delay;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.start(t); o.stop(t + dur + 0.05);
+  } catch(e) {}
+}
+
+function playCorrect() {
+  // bright cheerful arpeggio
+  [[523,'sine',0.22,0.28,0],[659,'sine',0.2,0.25,0.1],[784,'sine',0.2,0.25,0.2],[1047,'sine',0.3,0.28,0.33]].forEach(([f,t,d,v,dl])=>beep(f,t,d,v,dl));
+}
+
+function playWrong() {
+  // loud buzzer
+  beep(220,'sawtooth',0.08,0.3,0);
+  beep(180,'sawtooth',0.2,0.28,0.07);
+  beep(150,'sawtooth',0.25,0.22,0.18);
+}
+
+function playWarning() {
+  beep(440,'triangle',0.1,0.2,0);
+  beep(370,'triangle',0.12,0.18,0.13);
+}
+
+function playStreak() {
+  [523,587,659,698,784,880,1047,1319].forEach((f,i)=>beep(f,'sine',0.18,0.22,i*0.07));
+  setTimeout(()=>beep(1319,'sine',0.5,0.3,0), 580);
+}
+
+function playLevelUp() {
+  [392,494,587,659,784,988,1175].forEach((f,i)=>beep(f,'sine',0.22,0.24,i*0.09));
+}
+
+function playGameOver() {
+  [330,294,247,220,196].forEach((f,i)=>beep(f,'sawtooth',0.28,0.18,i*0.13));
+}
+
+// ================================================================
+// GAME STATE
+// ================================================================
+const MAX_ATTEMPTS = 3;
+const TOTAL_Q = 20;
+
+let questions=[], currentIdx=0;
+let correct=0, wrong=0, streak=0, bestStreak=0;
+let attemptsLeft=MAX_ATTEMPTS;
+let direction='en-to-he';
+let questionDone=false;
+
+// ================================================================
+// HELPERS
+// ================================================================
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function normalize(s) {
+  return s.trim().toLowerCase().replace(/[.,!?'"]/g,'').replace(/\s+/g,' ');
+}
+
+function heartHTML(n) {
+  return '❤️ '.repeat(n) + '🖤 '.repeat(MAX_ATTEMPTS - n);
+}
+
+function updateStats() {
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-wrong').textContent   = wrong;
+  document.getElementById('stat-streak').textContent  = streak;
+}
+
+function updateHearts() {
+  const el = document.getElementById('attempts-row');
+  el.innerHTML = heartHTML(attemptsLeft);
+  if (attemptsLeft === 1) {
+    el.style.animation = 'none'; void el.offsetWidth;
+    el.style.animation = 'shake 0.45s';
+  }
+}
+
+// ================================================================
+// START QUIZ
+// ================================================================
+function startQuiz() {
+  correct=0; wrong=0; streak=0; bestStreak=0; currentIdx=0;
+  questions = shuffle(VOCABULARY).slice(0, Math.min(TOTAL_Q, VOCABULARY.length));
+  updateStats();
+  document.getElementById('quiz-card').style.display     = 'block';
+  document.getElementById('result-screen').style.display = 'none';
+  loadQuestion();
+}
+
+// ================================================================
+// LOAD QUESTION
+// ================================================================
+function loadQuestion() {
+  questionDone = false;
+  attemptsLeft = MAX_ATTEMPTS;
+  const q = questions[currentIdx];
+  direction = Math.random() < 0.5 ? 'en-to-he' : 'he-to-en';
+
+  // counter + progress
+  document.getElementById('q-counter').textContent =
+    `Question ${currentIdx+1} of ${questions.length}`;
+  document.getElementById('progress-fill').style.width =
+    `${(currentIdx/questions.length)*100}%`;
+
+  updateHearts();
+
+  // direction badge
+  const badge = document.getElementById('dir-badge');
+  if (direction === 'en-to-he') {
+    badge.textContent = '🇬🇧 Translate to Hebrew';
+    badge.className   = 'dir-badge en';
+  } else {
+    badge.textContent = '🇮🇱 Translate to English';
+    badge.className   = 'dir-badge he';
+  }
+
+  // word + hint
+  const wordEl  = document.getElementById('word-shown');
+  const hintEl  = document.getElementById('verb-hint');
+  const labelEl = document.getElementById('prompt-label');
+
+  if (direction === 'en-to-he') {
+    wordEl.textContent  = q.en;
+    wordEl.className    = 'word-shown en-word';
+    labelEl.textContent = 'What is this in Hebrew?';
+    hintEl.style.display = 'none';
+  } else {
+    wordEl.textContent  = q.he;
+    wordEl.className    = 'word-shown he-word';
+    labelEl.textContent = 'What is this in English?';
+    hintEl.style.display = q.past ? 'inline-block' : 'none';
+  }
+
+  // bounce
+  wordEl.classList.remove('bounce');
+  void wordEl.offsetWidth;
+  wordEl.classList.add('bounce');
+
+  // inputs
+  buildInputs(q);
+
+  // reset feedback & buttons
+  const fb = document.getElementById('feedback-box');
+  fb.style.display = 'none'; fb.textContent = '';
+  document.getElementById('btn-next').style.display  = 'none';
+  document.getElementById('btn-check').style.display = 'block';
+
+  // animate card
+  const ci = document.getElementById('card-inner');
+  ci.style.animation = 'none'; void ci.offsetWidth;
+  ci.style.animation = 'cardPop 0.5s cubic-bezier(0.34,1.56,0.64,1)';
+
+  // focus
+  setTimeout(() => { const i=document.getElementById('inp-main'); if(i) i.focus(); }, 60);
+
+  // keyboard
+  document.onkeydown = e => {
+    if (e.key === 'Enter') { questionDone ? nextQuestion() : checkAnswer(); }
+  };
+}
+
+function buildInputs(q) {
+  const area = document.getElementById('inputs-area');
+  area.innerHTML = '';
+  if (direction === 'en-to-he') {
+    area.innerHTML = `
+      <div class="input-wrap">
+        <div class="input-label">Hebrew translation</div>
+        <input type="text" id="inp-main" placeholder="כתוב כאן..." dir="rtl" autocomplete="off"/>
+      </div>`;
+  } else if (q.past) {
+    area.innerHTML = `
+      <div class="input-wrap">
+        <div class="input-label">Infinitive (e.g. "to run")</div>
+        <input type="text" id="inp-main" placeholder="to ..." autocomplete="off"/>
+      </div>
+      <div class="input-wrap">
+        <div class="input-label">Past tense (e.g. "ran")</div>
+        <input type="text" id="inp-past" placeholder="past form..." autocomplete="off"/>
+      </div>`;
+  } else {
+    area.innerHTML = `
+      <div class="input-wrap">
+        <div class="input-label">English translation</div>
+        <input type="text" id="inp-main" placeholder="type here..." autocomplete="off"/>
+      </div>`;
+  }
+}
+
+// ================================================================
+// CHECK ANSWER — 3 attempts
+// ================================================================
+function checkAnswer() {
+  if (questionDone) return;
+
+  const q       = questions[currentIdx];
+  const mainInp = document.getElementById('inp-main');
+  const pastInp = document.getElementById('inp-past');
+  const mainVal = normalize(mainInp ? mainInp.value : '');
+  const pastVal = pastInp ? normalize(pastInp.value) : null;
+
+  let isCorrect=false, mainOk=false, pastOk=false;
+  let correctAnswer='';
+
+  if (direction === 'en-to-he') {
+    isCorrect = mainVal === q.he.trim();
+    mainOk    = isCorrect;
+    correctAnswer = q.he;
+  } else if (q.past) {
+    mainOk    = mainVal === normalize(q.en);
+    pastOk    = pastVal  === normalize(q.past);
+    isCorrect = mainOk && pastOk;
+    correctAnswer = `${q.en}  /  ${q.past}`;
+  } else {
+    mainOk    = mainVal === normalize(q.en);
+    isCorrect = mainOk;
+    correctAnswer = q.en;
+  }
+
+  const fb = document.getElementById('feedback-box');
+
+  if (isCorrect) {
+    // ✅ CORRECT!
+    questionDone = true;
+    correct++;
+    streak++;
+    if (streak > bestStreak) bestStreak = streak;
+
+    if (mainInp) { mainInp.classList.remove('inp-wrong'); mainInp.classList.add('inp-correct'); }
+    if (pastInp) { pastInp.classList.remove('inp-wrong'); pastInp.classList.add('inp-correct'); }
+
+    playCorrect();
+    flashScreen();
+    confettiBurst();
+
+    const msgs = [
+      '🎯 Spot on!','⚡ Nailed it!','🔥 YES!!','💥 BOOM!',
+      '🌟 Fantastic!','😎 Too easy!','🏆 Perfect!','✅ Correct!',
+      '🚀 Crushing it!','💪 That\'s it!'
+    ];
+    fb.className    = 'feedback-box correct';
+    fb.textContent  = msgs[Math.floor(Math.random()*msgs.length)];
+    fb.style.display = 'block';
+
+    if (streak >= 3 && streak % 3 === 0) {
+      showToast(`🔥 ${streak} in a row! INSANE!`);
+      playStreak();
+    }
+
+    updateStats();
+    document.getElementById('btn-check').style.display = 'none';
+    document.getElementById('btn-next').style.display  = 'block';
+
+  } else {
+    // ❌ WRONG attempt
+    attemptsLeft--;
+    updateHearts();
+
+    // shake wrong inputs, green correct ones (for verbs)
+    if (direction === 'en-to-he' || !q.past) {
+      if (mainInp) { mainInp.classList.remove('inp-wrong'); void mainInp.offsetWidth; mainInp.classList.add('inp-wrong'); }
+    } else {
+      if (mainInp) {
+        mainInp.classList.remove('inp-wrong','inp-correct');
+        void mainInp.offsetWidth;
+        mainInp.classList.add(mainOk ? 'inp-correct' : 'inp-wrong');
+      }
+      if (pastInp) {
+        pastInp.classList.remove('inp-wrong','inp-correct');
+        void pastInp.offsetWidth;
+        pastInp.classList.add(pastOk ? 'inp-correct' : 'inp-wrong');
+      }
+    }
+
+    if (attemptsLeft > 0) {
+      // Still more attempts
+      playWarning();
+      fb.className = 'feedback-box warning';
+      if (attemptsLeft === 2) {
+        fb.textContent = '😬 Not quite! You have 2 more tries...';
+      } else {
+        fb.textContent = '😰 Still not right! Last chance — you\'ve got this!';
+      }
+      fb.style.display = 'block';
+
+      // Clear wrong inputs after a moment so they can retype
+      setTimeout(() => {
+        if (direction === 'en-to-he' || !q.past) {
+          if (mainInp) { mainInp.classList.remove('inp-wrong'); mainInp.value = ''; mainInp.focus(); }
+        } else {
+          if (mainInp && !mainOk) { mainInp.classList.remove('inp-wrong'); mainInp.value = ''; }
+          if (pastInp && !pastOk) { pastInp.classList.remove('inp-wrong'); pastInp.value = ''; }
+          const toFocus = (mainInp && !mainOk) ? mainInp : pastInp;
+          if (toFocus) toFocus.focus();
+        }
+      }, 700);
+
+    } else {
+      // Out of attempts
+      questionDone = true;
+      wrong++;
+      streak = 0;
+      playWrong();
+      fb.className = 'feedback-box wrong';
+      fb.innerHTML = `😅 Out of tries! The answer was: <strong>${correctAnswer}</strong>`;
+      fb.style.display = 'block';
+
+      updateStats();
+      document.getElementById('btn-check').style.display = 'none';
+      document.getElementById('btn-next').style.display  = 'block';
+    }
+  }
+}
+
+// ================================================================
+// NEXT QUESTION
+// ================================================================
+function nextQuestion() {
+  currentIdx++;
+  if (currentIdx >= questions.length) showResult();
+  else loadQuestion();
+}
+
+// ================================================================
+// RESULT SCREEN
+// ================================================================
+function showResult() {
+  document.getElementById('quiz-card').style.display     = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  document.getElementById('progress-fill').style.width   = '100%';
+
+  const total = correct + wrong;
+  const pct   = total > 0 ? Math.round(correct/total*100) : 0;
+
+  let grade, color, title, sub;
+  if      (pct>=95){ grade='A+'; color='#00c853'; title='🏆 LEGENDARY!';      sub='You absolutely smashed it. Exam? What exam? 😎'; }
+  else if (pct>=85){ grade='A';  color='#00c853'; title='🎉 Awesome!';         sub='Really strong — you\'ve totally got this!'; }
+  else if (pct>=75){ grade='B';  color='#2979ff'; title='👍 Good Job!';        sub='Solid work. A little more and you\'re golden!'; }
+  else if (pct>=65){ grade='C';  color='#ff8c00'; title='📚 Not bad!';         sub='You\'re getting there. Keep at it!'; }
+  else if (pct>=50){ grade='D';  color='#ff8c00'; title='💪 Keep Going!';      sub='You can do better — try again!'; }
+  else             { grade='F';  color='#ff5252'; title='😤 Needs More Work!'; sub='Study a bit more and come back stronger!'; }
+
+  const circle = document.getElementById('grade-circle');
+  circle.style.borderColor = color;
+  circle.style.boxShadow   = `0 0 40px ${color}55, 0 6px 0 ${color}33`;
+
+  document.getElementById('grade-letter').style.color = color;
+  document.getElementById('grade-letter').textContent = grade;
+  document.getElementById('grade-pct').textContent    = pct + '%';
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent   = sub;
+  document.getElementById('res-correct').textContent  = correct;
+  document.getElementById('res-wrong').textContent    = wrong;
+  document.getElementById('res-streak').textContent   = bestStreak;
+
+  if (pct >= 75) { setTimeout(megaConfetti, 350); playLevelUp(); }
+  else           { playGameOver(); }
+}
+
+// ================================================================
+// CONFETTI
+// ================================================================
+const COLORS = ['#ff5252','#ff8c00','#ffe033','#00c853','#2979ff','#aa00ff','#f50057','#ffffff','#00bcd4'];
+
+function spawnPiece(x, y, vx=0) {
+  const el    = document.createElement('div');
+  el.className = 'confetti-piece';
+  const size  = 8 + Math.random()*12;
+  const color = COLORS[Math.floor(Math.random()*COLORS.length)];
+  const dur   = 0.8 + Math.random()*1.0;
+  const shape = Math.random() < 0.5 ? '50%' : '2px';
+  el.style.cssText = `
+    left:${x + vx}px; top:${y}px;
+    width:${size}px; height:${size}px;
+    background:${color};
+    border-radius:${shape};
+    animation-duration:${dur}s;
+    margin-left:${(Math.random()-0.5)*160}px;
+  `;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), dur*1000+200);
+}
+
+function confettiBurst() {
+  const card = document.getElementById('quiz-card');
+  const rect  = card.getBoundingClientRect();
+  const cx    = rect.left + rect.width/2;
+  const cy    = rect.top + 80;
+  for(let i=0;i<50;i++) spawnPiece(cx + (Math.random()-0.5)*40, cy);
+}
+
+function megaConfetti() {
+  for(let wave=0;wave<10;wave++) {
+    setTimeout(()=>{
+      const x = Math.random()*window.innerWidth;
+      for(let i=0;i<35;i++) spawnPiece(x, -10);
+    }, wave*160);
+  }
+}
+
+// ================================================================
+// FLASH
+// ================================================================
+function flashScreen() {
+  const ov = document.getElementById('win-overlay');
+  ov.classList.remove('flash'); void ov.offsetWidth; ov.classList.add('flash');
+}
+
+// ================================================================
+// TOAST
+// ================================================================
+function showToast(msg) {
+  const t = document.getElementById('streak-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+// ================================================================
+// GO!
+// ================================================================
+startQuiz();
+</script>
+</body>
+</html>
