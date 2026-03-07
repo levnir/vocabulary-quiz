@@ -562,9 +562,8 @@ input[type="text"].inp-wrong {
      ================================================================ -->
 <script>
 const VOCABULARY = [
-  
-  /*
-  
+
+/*
   { en: "hello",       he: "שלום" },
   { en: "goodbye",     he: "להתראות" },
   { en: "thank you",   he: "תודה" },
@@ -585,10 +584,9 @@ const VOCABULARY = [
   { en: "to go",       past: "went",   he: "ללכת" },
   { en: "to see",      past: "saw",    he: "לראות" },
   { en: "to love",     past: "loved",  he: "לאהוב" },
-  
-  */
-  
-  { en: "to be", past: "was/were", he: "להיות" },
+*/
+
+{ en: "to be", past: "was/were", he: "להיות" },
 { en: "to beat", past: "beat", he: "להביס" },
 { en: "to become", past: "became", he: "להפוך להיות" },
 { en: "to begin", past: "began", he: "להתחיל" },
@@ -613,7 +611,7 @@ const VOCABULARY = [
 { en: "to fall", past: "fell", he: "ליפול" },
 
 
-  
+
 ];
 </script>
 
@@ -810,7 +808,12 @@ function updateHearts() {
 // ================================================================
 function startQuiz() {
   correct=0; wrong=0; streak=0; bestStreak=0; currentIdx=0;
-  questions = shuffle(VOCABULARY);
+  // Each word appears twice: once en->he, once he->en, in random order
+const pairs = VOCABULARY.flatMap(w => [
+  {...w, _dir: 'en-to-he'},
+  {...w, _dir: 'he-to-en'}
+]);
+questions = shuffle(pairs);
   updateStats();
   document.getElementById('quiz-card').style.display     = 'block';
   document.getElementById('result-screen').style.display = 'none';
@@ -825,7 +828,7 @@ function loadQuestion() {
   answerRevealed = false;
   attemptsLeft = MAX_ATTEMPTS;
   const q = questions[currentIdx];
-  direction = Math.random() < 0.5 ? 'en-to-he' : 'he-to-en';
+  direction = q._dir;
 
   // counter + progress
   document.getElementById('q-counter').textContent =
