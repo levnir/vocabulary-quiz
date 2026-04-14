@@ -1,0 +1,9 @@
+can you extract the vocabulary from the file and make it a text file?
+
+make the file look like that: a row for example
+
+{ en: "to run", past: "ran", he: "לרוץ" },
+{ en: "to eat", past: "ate", he: "לאכול" },
+
+please make sure to end each line with a comma.
+
